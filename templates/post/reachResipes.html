@@ -1,0 +1,21 @@
+{% extends "post/base.html" %}
+{% block content %}
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-8 text-center">
+                  <img src="{% static 'images/logo.png' %}" class="img-responsive logo mb-5 mt-5" />
+                  <form method="POST">
+                      {%csrf_token%}
+                      <div class="input-group input-group-lg mb-5">
+                      <input type="text" name="query" class="form-control inputstyle" placeholder="искать рецепты всего мира..." required>
+                      <button class="btn whoop" type="submit" id="button-addon2">Найти рецепты</button>
+                      </div>
+                  </form>
+
+                  <h1>{{api.0.title | capfirst}} имеется в общей сложности <strong> {{api.0.ingredients}} рецептов</strong>
+                  </h1>
+                  <div>{{ api.0.servings }}</div>
+                  <div>{{ api.0.instructions }}</div>
+          </div>
+          </div>
+      </div>

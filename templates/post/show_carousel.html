@@ -1,0 +1,11 @@
+{% for p in visuals %}
+    {% if forloop.counter == 1 %}
+    <div class="item active">
+    {% else %}
+    <div class="item">
+    {% endif %}
+        <img src="{{ p.img }}" alt="Image" width="460" height="345">
+  <div class="carousel-caption">
+    <h3>{{ p.title }}</h3></div>
+    </div>
+{% endfor %}

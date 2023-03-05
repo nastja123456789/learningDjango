@@ -1,0 +1,21 @@
+{% extends "post/base.html" %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" action="predictImage">
+
+ {% csrf_token %}
+ <div class="col-md-4 col-sm-4"><label for="fname">Upload Image File Here:</label> </div> <input name="filePath" type="file"><br><br>
+ <br>
+
+
+ <input type="submit" value="Submit" ></div>
+
+ <h2>The classification of the image is {{predictedLabel}}</h2>
+ <img src={{filePathName}} alt='imagename'>
+ {{filePathName}}
+</form>
+<div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                         <li><a href="viewDataBase" class="smoothScroll">View gallery</a></li>
+                    </ul>
+</div>
+{% endblock %}

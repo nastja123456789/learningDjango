@@ -1,0 +1,113 @@
+{% extends "post/base.html" %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Продукты{% endif %}
+{% endblock %}
+{% block content %}
+    <div id="sidebar">
+        <h3>Категории</h3>
+        <ul>
+            <li {% if not category %}class="selected"{% endif %}>
+                <a href="{% url "polls:products" %}">Все</a>
+            </li>
+{#            {% for c in categories %}#}
+{#                <li {% if category.slug == c.slug %}class="selected"{% endif %}>#}
+{#                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+        </ul>
+    </div>
+    <div id="main" class="product-list">
+        <h1>{% if category %}{{ category.name }}{% else %}Продукты{% endif %}</h1>
+    {% include "pagination.html" with page=products %}
+        {% for product in products %}
+            <div class="card my-4" style="width: 18rem;">
+            <div class="card-body">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="card-img-top" alt="...">
+            <h5 class="card-title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a><br>
+                    ${{ product.price }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ recipe.author }}</h6>
+            <p class="card-text">{{ recipe.description }}</p>
+            <h6 class="card-subtitle mb-2 text-muted">
+            {{ recipe.updated_at|date:"F d, Y" }}
+            </h6>
+            </div>
+            </div>
+        {% endfor %}
+    </div>
+     {% if request.user.is_authenticated %}
+    <div class="container">
+      <form id="filterForm">
+        <label for="year">Выберите год:</label>
+        <select name="year" id="year"></select>
+        <input type="submit" value="Load" name="_load">
+      </form>
+      <div class="row">
+        <div class="col-6">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+      <script>
+  $(document).ready(function() {
+    $.ajax({
+      url: "/chart/filter-options/",
+      type: "GET",
+      dataType: "json",
+      success: (jsonResponse) => {
+        jsonResponse.options.forEach(option => {
+          $("#year").append(new Option(option, option));
+        });
+        loadAllCharts($("#year").children().first().val());
+      },
+      error: () => console.log("Failed to fetch chart filter options!")
+    });
+  });
+
+$("#filterForm").on("submit", (event) => {
+  event.preventDefault();
+
+  const year = $("#year").val();
+  loadAllCharts(year)
+});
+
+function loadChart(chart, endpoint) {
+  $.ajax({
+    url: endpoint,
+    type: "GET",
+    dataType: "json",
+    success: (jsonResponse) => {
+      const title = jsonResponse.title;
+      const labels = jsonResponse.data.labels;
+      const datasets = jsonResponse.data.datasets;
+
+      chart.data.datasets = [];
+      chart.data.labels = [];
+
+      chart.options.title.text = title;
+      chart.options.title.display = true;
+      chart.data.labels = labels;
+      datasets.forEach(dataset => {
+        chart.data.datasets.push(dataset);
+      });
+      chart.update();
+    },
+    error: () => console.log("Failed to fetch chart data from " + endpoint + "!")
+  });
+}
+
+function loadAllCharts(year) {
+  loadChart(salesChart, `/chart/sales/${year}/`);
+}
+</script>
+<script>
+  let salesCtx = document.getElementById("salesChart").getContext("2d");
+  let salesChart = new Chart(salesCtx, {
+    type: "bar",
+    options: {
+      responsive: true,
+    }
+  });
+</script>
+    </div>
+    {% endif %}
+{% endblock %}

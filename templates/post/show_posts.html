@@ -1,0 +1,12 @@
+{% load blog_tags %}
+{% for post in posts %}
+        <h2>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </h2>
+        <p class="date">
+            Подписаться {{ post.publish }} на {{ post.author }}
+        </p>
+        {{ post.body|markdown|linebreaks }}
+        <p class="tags">Теги: {{ post.tags.all|join:", " }}</p>
+    {% endfor %}
+{#{% include "pagination.html" with page=posts %}#}

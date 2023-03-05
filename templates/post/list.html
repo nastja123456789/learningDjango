@@ -1,0 +1,48 @@
+{% extends "post/base.html" %}
+{% load blog_tags %}
+{% block title %}Мой блог{% endblock %}
+{% block content %}
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+<!-- Indicators -->
+<ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+</ol>
+
+<div class="carousel-inner" role="listbox">
+    {% show_carousel %}
+</div>
+
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Предыдущий</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Следующий</span>
+    </a>
+</div>
+    <h1>Мои комментарии</h1> {% show_posts %}
+        <h2>
+            {% block main %}
+                <a class="btn btn-primary" href="{% url "polls:home" %}" role="button">Предсказать покупку по введенной цене</a>
+                <a class="btn btn-primary" href="{% url "polls:ml" %}" role="button">Показать название изображения</a>
+{% endblock %}
+        </h2>
+    {% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Опросы недоступны.</p>
+{% endif %}
+    <div id="sidebar">
+    <h2>Мой блог</h2>
+    <p>Это мой блог. Я написала {% total_posts %} постов.</p>
+      <h3>Последние посты</h3>{% show_latest_posts 3 %}
+    </div>
+    </div>
+{% endblock %}

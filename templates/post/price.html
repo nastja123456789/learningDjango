@@ -1,0 +1,33 @@
+{% extends "post/base.html" %}
+{% load static %}
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    {% if recipes %}
+<h1>Рецепты:</h1>
+{% for recipe in recipes %}
+<div class="card my-4" style="width: 18rem;">
+  <div class="card-body">
+   <img src="{{ recipe.img_url }}" class="card-img-top" alt="...">
+    <h5 class="card-title">{{ recipe.title }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{ recipe.author }}</h6>
+    <p class="card-text">{{ recipe.description }}</p>
+    <h6 class="card-subtitle mb-2 text-muted">
+      {{ recipe.updated_at|date:"F d, Y" }}
+    </h6>
+  </div>
+</div>
+
+{% endfor %}
+<!-- -->
+    {% endif %}
+    <div>
+    <h2>Добавить новый рецепт</h2>
+    <form action="{% url 'polls:recipe' %}" method="post">
+        {{ recipe_create.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Добавить рецепт"></p>
+    </form>
+    </div>
+{% endblock content %}

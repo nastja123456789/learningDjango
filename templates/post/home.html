@@ -1,0 +1,10 @@
+{% extends "post/base.html" %}
+{% block content %}
+<form action="" method="post">
+            {% csrf_token %}
+					<span class="label-input100">Введите цену:</span>
+					<input class="input100" type="number" name="sepal_length" placeholder="Ваша цена"><br><br>
+                    <button class="contact100-form-btn">Отправить</button>
+        </form>
+    <div>{{ result }}</div>
+{% endblock %}
